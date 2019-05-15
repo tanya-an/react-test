@@ -3,6 +3,8 @@
  */
 
 import { createStore, applyMiddleware, compose } from 'redux';
+import { loadPosts } from 'containers/PostPage/actions';
+import fetchPosts from 'containers/PostPage/saga';
 import { routerMiddleware } from 'connected-react-router';
 import createSagaMiddleware from 'redux-saga';
 import createReducer from './reducers';
@@ -43,9 +45,10 @@ export default function configureStore(initialState = {}, history) {
   );
 
   // Extensions
-  store.runSaga = sagaMiddleware.run;
+  store.runSaga = sagaMiddleware.run(fetchPosts);
   store.injectedReducers = {}; // Reducer registry
   store.injectedSagas = {}; // Saga registry
+  store.dispatch(loadPosts());
 
   // Make reducers hot reloadable, see http://mxs.is/googmo
   /* istanbul ignore next */
